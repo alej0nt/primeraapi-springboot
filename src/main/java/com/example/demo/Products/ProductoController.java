@@ -1,28 +1,24 @@
-package com.example.demo;
+package com.example.demo.Products;
 
 import java.util.List;
-
+import com.example.demo.Users.Usuario;
+import com.example.demo.Users.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 //Aqui creamos nuestra ruta de la api
-@RequestMapping("/api/Productos")
+@RequestMapping("/api/productos")
 public class ProductoController {
     private final ProductoService productoService;
+    private final UsuarioService usuarioService;
 
     @Autowired
-    public ProductoController(ProductoService productoService) {
+    public ProductoController(ProductoService productoService, UsuarioService usuarioService) {
         this.productoService = productoService;
+        this.usuarioService = usuarioService;
     }
 
     //Metodo para listar todos los usuarios
@@ -30,9 +26,10 @@ public class ProductoController {
     //Usamos getmapping para definir el endpoint para mostrar los usuarios
     @GetMapping
     //Creamos el metodo que retornara una respuesta junto con una lista con los productos de la base de datos
-    public ResponseEntity<List<Producto>> findAll() {
+    public ResponseEntity<List<Producto>> findAll(@RequestParam(required = false) String nombre,
+                                                  @RequestParam(required = false) String categoria, @RequestParam(defaultValue = "0") int precio, @RequestParam(defaultValue = "0") int stock) {
         //Llenamos una lista de productos con el metodo findAll (Que también devuelve una lista de productos)
-        List<Producto> productos = productoService.findAll();
+        List<Producto> productos = productoService.buscarPorFiltros(nombre, categoria, precio, stock);
         //Retornamos la entidad de respuesta con nuestra lista y con el estado OK
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
@@ -43,12 +40,13 @@ public class ProductoController {
     @GetMapping("/{id}")
     /*Usamos el PathVariable para obtener el String de la url
      Igual que el metodo anterior, usaremos un ResponseEntity, pero esta vez lo que devolveremos es solo el producto que nos interesa*/
-    public ResponseEntity<Producto> findById(@PathVariable String id) {
+    public ResponseEntity<Producto> findById(@RequestHeader("Authorization") String Authtoken, @PathVariable String id) {
         //Buscamos nuestro producto con el metodo que hicimos en repository
         Producto producto = productoService.findById(id);
+        Usuario usuario =   usuarioService.findByAuthToken(Authtoken);
         //Validamos que exista
         //Si existe
-        if (producto != null) {
+        if (producto != null && usuario != null) {
             //Si existe retornamos el producto y el OK (200)
             return new ResponseEntity<>(producto, HttpStatus.OK);
         }
@@ -109,8 +107,5 @@ public class ProductoController {
         //Si no existe
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-
-
 
 }

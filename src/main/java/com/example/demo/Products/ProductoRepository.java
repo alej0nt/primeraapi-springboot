@@ -1,9 +1,10 @@
-package com.example.demo;
+package com.example.demo.Products;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 public class ProductoRepository {
     // Simulamos una base de datos con un Map
     private final Map<String, Producto> baseDeDatos = new HashMap<>();
+   
 
     //Metodo de save
     public Producto save (Producto p) {
@@ -53,5 +55,18 @@ public class ProductoRepository {
         }
         //Retornamos null si este producto no existe
         return null;
+    }
+    // Buscar usuarios por filtros
+    public List<Producto> buscarPorFiltros(String nombre, String categoria, int precio, int stock){
+        //Se obtiene un stream de la base de datos y esta se filtra segun lo q necesitemos
+        return baseDeDatos.values().stream()
+                //Si la variable por la que queremos filtrar es == a null , se retornaran todos los datos, si no es null, se retornan los datos que tengan la variable que querermos filtrar
+                //Ejemplo, si quiero filtrar por categoria "Electronica" y no hay esta categoria, retornaran todos los datos del map
+                .filter(u -> nombre == null || u.getNombre().contains(nombre))
+                .filter(u -> categoria == null || u.getCategoria().contains(categoria))
+                .filter(u -> stock == 0 || u.getPrecio() == precio)
+                .filter(u -> stock == 0 || u.getStock() == stock)
+                //Esto convierte el stream a una lista
+                .collect(Collectors.toList());
     }
 }
