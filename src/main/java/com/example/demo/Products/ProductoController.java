@@ -42,11 +42,10 @@ public class ProductoController {
      Igual que el metodo anterior, usaremos un ResponseEntity, pero esta vez lo que devolveremos es solo el producto que nos interesa*/
     public ResponseEntity<Producto> findById(@RequestHeader("Authorization") String Authtoken, @PathVariable String id) {
         //Buscamos nuestro producto con el metodo que hicimos en repository
-        Producto producto = productoService.findById(id);
-        Usuario usuario =   usuarioService.findByAuthToken(Authtoken);
+        Producto producto = productoService.findById(Authtoken, id);
         //Validamos que exista
         //Si existe
-        if (producto != null && usuario != null) {
+        if (producto != null ) {
             //Si existe retornamos el producto y el OK (200)
             return new ResponseEntity<>(producto, HttpStatus.OK);
         }
@@ -60,9 +59,9 @@ public class ProductoController {
     @PostMapping
     /*Retornaremos un ResponseEntity con el producto que crearemos.
     A su vez, le pediremos un Body para crear el producto*/
-    public ResponseEntity<Producto> create(@RequestBody Producto producto) {
+    public ResponseEntity<Producto> create(@RequestHeader("Authorization") String authToken, @RequestHeader("X-user-role") String role, @RequestBody Producto producto) {
         //Le asignaremos el producto a una variable
-        Producto newProducto = productoService.save(producto);
+        Producto newProducto = productoService.save(authToken, role, producto);
         //Devolveremos el producto y el status CREATED (201)
         return new ResponseEntity<>(newProducto, HttpStatus.CREATED);
     }
@@ -72,9 +71,9 @@ public class ProductoController {
     //Pediremos un put mapping ya que necesitamos el endpoint /{id} para saber que user actualizaremos
     @PutMapping ("/{id}")
     //Ahora, pediremos el path variable para sacar el id de la url y usaremos request body para pedir el body para actualizar el producto
-    public ResponseEntity<Producto> update(@PathVariable String id, @RequestBody Producto producto) {
+    public ResponseEntity<Producto> update( @RequestHeader("Authorization") String authTok, @PathVariable String id, @RequestBody Producto producto) {
         //Buscaremos nuestro producto
-        Producto newProducto = productoService.findById(producto.getId());
+        Producto newProducto = productoService.findById(authTok, producto.getId());
         //Validamos si existe
         //Si existe
         if (newProducto != null) {
@@ -94,9 +93,9 @@ public class ProductoController {
     //Usaremos el deleteMapping /{id} para encontrar el endpoint en el que sacaremos la id del producto a eliminar
     @DeleteMapping("/{id}")
     //Sacaremos el id de la url
-    public ResponseEntity<Producto> delete(@PathVariable String id) {
+    public ResponseEntity<Producto> delete(@RequestHeader("Authorization") String authTok, @PathVariable String id) {
         //Miraremos si el producto existe
-        Producto producto = productoService.findById(id);
+        Producto producto = productoService.findById(authTok, id);
         //Si existe
         if (producto != null) {
             //Removeremos nuestro producto

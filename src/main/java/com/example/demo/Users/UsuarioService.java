@@ -23,9 +23,9 @@ public class UsuarioService {
     
     private void initSampleData() {
         // Crear usuarios
-        Usuario juan = new Usuario("Juan Pérez", "juan@example.com", 30);
-        Usuario maria = new Usuario("María López", "maria@example.com", 25);
-        Usuario carlos = new Usuario("Carlos Ruiz", "carlos@example.com", 40);
+        Usuario juan = new Usuario("Juan Pérez", "juan@example.com", "Admin",30);
+        Usuario maria = new Usuario("María López", "maria@example.com", "Client", 25);
+        Usuario carlos = new Usuario("Carlos Ruiz", "carlos@example.com", "Job",40);
         
         // Guardar usuarios
         save(juan);
