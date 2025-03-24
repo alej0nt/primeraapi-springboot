@@ -2,17 +2,17 @@ package com.example.demo.Products;
 
 import java.util.List;
 import com.example.demo.Users.Usuario;
-import com.example.demo.Users.UsuarioService;
+import com.example.demo.Users.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
 public class ProductoService {
     private final ProductoRepository productoRepository;
-    private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
     @Autowired
-    public ProductoService(ProductoRepository productoRepository, UsuarioService usuarioService) {
+    public ProductoService(ProductoRepository productoRepository, UsuarioRepository usuarioRepository) {
         this.productoRepository = productoRepository;
-        this.usuarioService = usuarioService;
+        this.usuarioRepository = usuarioRepository;
         initData();
     }
 
@@ -26,7 +26,7 @@ public class ProductoService {
     //Basicamente esto vendria siendo un conector entre Repository y el controlador
 
     public Producto save (String authToken, String role, Producto producto){
-        Usuario usuario = usuarioService.findByAuthToken(authToken);
+        Usuario usuario = usuarioRepository.findByAuthToken(authToken);
         if (usuario != null && usuario.getRole().equals(role)){
             return productoRepository.save(producto);
         }
@@ -34,18 +34,17 @@ public class ProductoService {
     }
 
     public Producto findById(String authToken, String id){
-        Usuario user = usuarioService.findByAuthToken(authToken);
+        Usuario user = usuarioRepository.findByAuthToken(authToken);
         if  (user != null){
             return productoRepository.findById(id);
         }
         return null;
     }
-    public List<Producto> findAll(){
-        return productoRepository.findAll();
-    }
+
     public void removeById(String id){
         productoRepository.deleteById(id);
     }
+
     public Producto update(Producto producto){
         return productoRepository.update(producto);
     }

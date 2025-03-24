@@ -28,15 +28,6 @@ public class ProductoRepository {
         return baseDeDatos.get(id);
     }
 
-    //Listar todos los usuarios
-
-    public List<Producto> findAll() {
-        /*Hace una colección con los datos de la base de datos
-        despues, esta coleccion se añade a un arrayList que se retorna
-         */
-        return new ArrayList<>(baseDeDatos.values());
-    }
-
     //Eliminar por id
     public void deleteById (String id) {
         //Se elimina el producto que encaje con la id que hay en nuestra base de datos simulada
