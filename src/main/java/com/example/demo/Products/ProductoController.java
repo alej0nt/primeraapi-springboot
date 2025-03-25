@@ -93,7 +93,7 @@ public class ProductoController {
     //Usaremos el deleteMapping /{id} para encontrar el endpoint en el que sacaremos la id del producto a eliminar
     @DeleteMapping("/{id}")
     //Sacaremos el id de la url
-    public ResponseEntity<Producto> delete(@RequestHeader("Authorization") String authTok, @PathVariable String id) {
+    public ResponseEntity<Void> delete(@RequestHeader("Authorization") String authTok, @PathVariable String id) {
         //Miraremos si el producto existe
         Producto producto = productoService.findById(authTok, id);
         //Si existe

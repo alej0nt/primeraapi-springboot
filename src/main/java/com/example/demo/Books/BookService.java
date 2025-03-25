@@ -20,7 +20,7 @@ public class BookService {
         initData();
     }
 
-    public void initData(){
+    private void initData(){
         bookRepository.save(new Book("Cien años de soledad", "Gabriel Garcia Marquez", 1990));
         bookRepository.save(new Book("La divina comedia", "Dante Aligheri", 1660));
 
