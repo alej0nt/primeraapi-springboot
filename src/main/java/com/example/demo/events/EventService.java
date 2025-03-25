@@ -15,14 +15,21 @@ public class EventService {
     }
 
     public void initSampleData() {
-        Event event1 = new Event("Fiesta", new Date(2025, 3, 8));
-        Event event2 = new Event("Reunion", new Date(2026, 4, 1));
+        Event event1 = new Event("Tech Conference", new Date(125, 3, 15));
+        Event event2 = new Event("Workshop", new Date(125, 4, 1));
         saveEvent(event1);
         saveEvent(event2);
+
+        String token1 = UUID.randomUUID().toString();
+        this.saveToken(token1);
     }
 
     public Event saveEvent(Event event) {
         return this.eventRepository.saveEvent(event);
+    }
+
+    public void saveToken(String token) {
+        this.eventRepository.saveToken(token);
     }
 
     public List<Event> getEvents(Date date) {
